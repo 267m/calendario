@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendario de evaluaciones · nov–dic 2026</title>
+<link rel="apple-touch-icon" href="calendario-icon.png">
+<link rel="icon" type="image/png" href="calendario-icon.png">
+<meta name="apple-mobile-web-app-title" content="Calendario">
+<meta name="theme-color" content="#fbf6f1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbf6f1;--card:#fff;--ink:#3b3245;--soft:#857a8f;--line:#efe6ee}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);background:var(--bg);
+  background-image:radial-gradient(circle at 8% 0%,#fde3ec 0,transparent 32%),radial-gradient(circle at 95% 10%,#e5e1fb 0,transparent 30%),radial-gradient(circle at 50% 100%,#dff3ea 0,transparent 40%);
+  background-attachment:fixed;min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 20px 80px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:650;margin:0;letter-spacing:-.01em}
+header h1{font-size:clamp(30px,4.4vw,46px);line-height:1.05}
+header h1 em{font-style:italic;font-weight:500;color:#c06b8f}
+header p{margin:8px 0 0;color:var(--soft);font-size:15px}
+
+.next{margin:22px 0 18px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;box-shadow:0 14px 30px -24px #8c6c9c}
+.next .lbl{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--soft)}
+.next .pill{display:flex;gap:10px;align-items:center;background:var(--c);border-radius:16px;padding:8px 12px;font-weight:700;font-size:14px}
+.next .pill b{font-family:Fraunces,serif;font-size:15px}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:22px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font:inherit;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;display:flex;gap:6px;align-items:center}
+.chip .dot{width:10px;height:10px;border-radius:50%;background:var(--c2)}
+.chip.off{opacity:.4;text-decoration:line-through}
+.chip.tog{margin-left:auto}
+.chip.tog.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.months{display:grid;grid-template-columns:1fr;gap:18px;margin-bottom:34px}
+.month{min-width:0;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:18px 16px 16px;box-shadow:0 20px 40px -32px #8c6c9c}
+.month h2{font-size:24px;margin:0 4px 12px}
+.month h2 em{font-weight:500;color:var(--soft);font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow{font-size:11px;font-weight:800;color:var(--soft);text-align:center;padding-bottom:4px;letter-spacing:.05em}
+.day{min-height:84px;border-radius:12px;padding:5px;background:#fcfafc;border:1.5px solid transparent;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:.15s}
+.day:hover{border-color:#e6d9ea}
+.day.past{opacity:.35;cursor:default}
+.day.blank{background:transparent;cursor:default}
+.day.today{border-color:#c06b8f;background:#fff0f5}
+.day.sel{border-color:var(--ink);background:#fff}
+.day.we .n{color:#b9adc0}
+.day .n{font-size:12px;font-weight:800;display:flex;justify-content:space-between}
+.day .n i{font-style:normal;font-size:9px;background:#c06b8f;color:#fff;border-radius:99px;padding:1px 6px}
+.day .n s{text-decoration:none;font-size:9px;color:#b24a5b;font-weight:800}
+.ev{font-size:12px;font-weight:700;line-height:1.15;border-radius:6px;padding:2px 4px;background:var(--c);color:var(--c3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev.big{box-shadow:inset 3px 0 0 var(--c2)}
+
+.detail{margin-top:14px;background:#fcfafc;border-radius:16px;padding:12px 14px;font-size:14px;display:none}
+.detail.open{display:block}
+.detail h3{font-size:16px;margin-bottom:6px}
+
+.agenda h2{font-size:28px;margin-bottom:14px}
+.week{margin-bottom:18px}
+.week h4{margin:0 0 8px;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--soft)}
+.item{display:grid;grid-template-columns:86px 1fr auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 16px;margin-bottom:8px;position:relative;overflow:hidden}
+.item::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--c2)}
+.item .date{font-family:Fraunces,serif;line-height:1}
+.item .date b{font-size:26px;display:block}
+.item .date small{font-family:Nunito;font-size:11.5px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.05em}
+.item .t{font-weight:800;font-size:15px}
+.item .t .k{margin-right:6px}
+.item .s{font-size:13px;color:var(--soft);font-weight:600;margin-top:2px}
+.item .s .sub{color:var(--c3);font-weight:800}
+.item .right{text-align:right}
+.when{display:inline-block;font-weight:800;font-size:13px;border-radius:999px;padding:5px 11px;background:#f3eef5;white-space:nowrap}
+.when.dl{background:#fde6ea;color:#9c3a4b}
+.w{display:block;margin-top:5px;font-size:12px;font-weight:800;color:var(--c3)}
+.item.past{opacity:.4}
+.notes{margin-top:28px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 18px;font-size:13.5px;color:var(--soft);line-height:1.55}
+.notes b{color:var(--ink)}
+.notes ul{margin:6px 0 0;padding-left:18px}
+
+@media (max-width:900px){.months{grid-template-columns:1fr}}
+@media (max-width:560px){
+  .day{min-height:58px}.ev{font-size:0;padding:0;height:6px;border-radius:3px;background:var(--c2)}
+  .item{grid-template-columns:62px 1fr}.item .right{grid-column:2;text-align:left}
+  .chip.tog{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Calendario <em>· nov–dic 2026</em></h1>
+    <p>Exámenes, cuestionarios, prácticas evaluadas, exposiciones y entregas de tus 5 asignaturas, sacados de los contratos.</p>
+  </header>
+
+  <div class="next" id="next"></div>
+  <div class="filters" id="filters"></div>
+  <div style="font-size:13px;color:var(--soft);font-weight:700;margin:-10px 0 18px;display:flex;flex-wrap:wrap;gap:14px">
+    <span>📝 Examen</span><span>❓ Cuestionario</span><span>🧪 Práctica evaluada</span><span>🎤 Exposición</span><span>📤 Entrega</span><span>💬 Foro</span><span>📋 Formulario calidad</span><span>🔁 Recuperaciones</span><span>Toca un día para ver el detalle</span>
+  </div>
+  <div class="months" id="months"></div>
+
+  <section class="agenda">
+    <h2>Agenda día a día</h2>
+    <div id="agenda"></div>
+  </section>
+
+  <div class="notes">
+    <b>A tener en cuenta</b>
+    <ul>
+      <li>Las horas «en clase» son tu horario: Negocio lunes 10–14 · Medioambiente martes 10–14 · Calidad miércoles 10–14 · Robots jueves 15–19 · Arquitectura viernes 15–19.</li>
+      <li>Si una entrega no lleva hora es que el contrato no la indica: mejor tenerla subida antes de esa clase o, como mucho, antes de las 23:59.</li>
+      <li>El post 03 del foro de Robots aparece en el contrato con fecha límite 19/12 a las 10:00. Es raro (es sábado y después de acabar), confírmalo con el profe.</li>
+      <li>El 08/12 es festivo nacional, pero hay entregas ese día (vídeo de Medioambiente y proyecto de Calidad).</li>
+      <li>Los contratos avisan de que las fechas pueden cambiar: si el profe anuncia otra cosa en el campus, manda lo del campus.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const S = {
+  arq:{ab:"Arquitectura",n:"Arquitectura",  c:"#ece6fd", c2:"#9b87e6", c3:"#5a46a8", cls:"vie 15:00–19:00"},
+  tay:{ab:"Robots",n:"Robots",         c:"#ffe4ec", c2:"#ea89a8", c3:"#a8406a", cls:"jue 15:00–19:00"},
+  sie:{ab:"Negocio",n:"Negocio",         c:"#dcf3ea", c2:"#6cc19c", c3:"#2c7a58", cls:"lun 10:00–14:00"},
+  gca:{ab:"Calidad",n:"Calidad",       c:"#ffeedd", c2:"#f0a865", c3:"#a3591a", cls:"mié 10:00–14:00"},
+  ima:{ab:"Medioambiente",n:"Medioambiente",c:"#def0fb", c2:"#6eb3df", c3:"#2a6e9c", cls:"mar 10:00–14:00"},
+};
+const K = {exam:"📝",quiz:"❓",lab:"🧪",expo:"🎤",ent:"📤",foro:"💬",form:"📋",recu:"🔁",info:"▶️"};
+const KN= {exam:"Examen",quiz:"Cuestionario",lab:"Práctica evaluada",expo:"Exposición",ent:"Entrega",foro:"Foro",form:"Formulario",recu:"Recuperaciones",info:"Inicio"};
+const MINOR = new Set(["foro","form","info","recu"]);
+// [fecha, asignatura, tipo, título, cuándo ("clase" = en horario de clase | "HH:MM" límite | texto), peso, nota]
+const EV = [
+ ["2026-11-13","arq","exam","Parcial 3","clase","10 %","Unidad III"],
+ ["2026-11-13","arq","lab","Práctica lab 3","clase","10 %",""],
+ ["2026-11-13","ima","foro","Foro post 4","límite (sin hora)","","Indicaciones en S11 actividades después de clase"],
+ ["2026-11-17","ima","quiz","Cuestionario","clase","1,5 %",""],
+ ["2026-11-17","ima","ent","Entrega parcial memoria","23:59","4 %","Grupal"],
+ ["2026-11-19","tay","info","Inicio prácticas IoT 1 y 2","clase","","Se entregan el 26/11"],
+ ["2026-11-20","arq","foro","Foro post 4","después de clase","1 %",""],
+ ["2026-11-24","ima","quiz","Cuestionario","clase","1,5 %",""],
+ ["2026-11-25","gca","lab","Práctica 4","clase","5 %",""],
+ ["2026-11-25","gca","quiz","Cuestionario","clase","3 %",""],
+ ["2026-11-26","tay","ent","Entrega prácticas IoT 1 y 2","14:00","4,5 % c/u","Se evalúan en la clase de ese día"],
+ ["2026-11-26","tay","lab","Evaluación prácticas IoT 1 y 2","clase","",""],
+ ["2026-11-27","arq","foro","Foro post 5","después de clase","1 %",""],
+ ["2026-11-29","arq","form","Formulario calidad","límite (desde 23/11)","",""],
+ ["2026-11-29","tay","form","Formulario calidad","límite (desde 23/11)","",""],
+ ["2026-11-29","gca","form","Formulario calidad","límite (desde 23/11)","",""],
+ ["2026-11-29","ima","form","Formulario calidad","límite (desde 23/11)","",""],
+ ["2026-11-30","sie","exam","Parcial 3","clase","15 %",""],
+ ["2026-11-30","sie","ent","Entrega proyecto","límite (sin hora)","20 %","Se expone el 07/12"],
+ ["2026-12-01","ima","exam","Parcial 4","clase","10 %","≈90 min · sesiones 11, 12 y 13"],
+ ["2026-12-01","ima","lab","Práctica lab 4","clase","5 %","≈90 min"],
+ ["2026-12-01","ima","ent","Memoria final","23:59","8 %","Grupal"],
+ ["2026-12-02","gca","exam","Parcial 4","clase","8 %","30–50 min · sesiones 10 a 13"],
+ ["2026-12-03","tay","ent","Entrega prácticas IoT 3 y 4","14:00","4,5 % c/u",""],
+ ["2026-12-04","arq","exam","Parcial 4","clase","10 %","Unidad IV"],
+ ["2026-12-04","arq","lab","Práctica lab 4","clase","10 %",""],
+ ["2026-12-07","sie","expo","Exposición proyecto","clase","",""],
+ ["2026-12-08","ima","ent","Vídeo presentación","23:59","5 %","Festivo · nota individual"],
+ ["2026-12-08","gca","ent","Entrega proyecto","límite (sin hora)","15 %","Festivo"],
+ ["2026-12-09","gca","expo","Exposición proyecto","clase","15 %",""],
+ ["2026-12-09","gca","foro","Foro post 5","después de clase","1 %",""],
+ ["2026-12-10","tay","ent","Entrega proyecto 02","10:00","20 %",""],
+ ["2026-12-10","tay","foro","Foro post 4","10:00","",""],
+ ["2026-12-10","tay","exam","Parcial 3","clase","12 %","Sesiones 10 a 15"],
+ ["2026-12-11","arq","expo","Entrega y presentación proyecto","clase","10 %",""],
+ ["2026-12-14","sie","form","Formulario calidad","límite (desde 07/12)","",""],
+ ["2026-12-14","sie","recu","Recuperaciones","clase","",""],
+ ["2026-12-16","gca","recu","Recuperaciones","clase","",""],
+ ["2026-12-18","arq","recu","Recuperaciones","clase","",""],
+ ["2026-12-19","tay","foro","Foro post 3","10:00","","Fecha rara en el contrato: confírmala"],
+];
+
+const TODAY = new Date(2026,10,13);
+(function(){ const d=new Date(); if(d.getFullYear()===2026 && d>TODAY) TODAY.setTime(new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()); })();
+const HOL = {"2026-12-08":"Festivo","2026-12-25":"Navidad"};
+const DOW=["lun","mar","mié","jue","vie","sáb","dom"];
+const MES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+let off = new Set(); let onlyBig = false; let sel = null;
+try{ const s=JSON.parse(localStorage.getItem("cal-uie-filtros")); if(s){ off=new Set(s.off||[]); onlyBig=!!s.onlyBig; } }catch(e){}
+const saveF=()=>{ try{ localStorage.setItem("cal-uie-filtros",JSON.stringify({off:[...off],onlyBig})); }catch(e){} };
+
+const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const pd = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
+const visible = () => EV.filter(e=>!off.has(e[1]) && !(onlyBig && MINOR.has(e[2])));
+const whenTxt = (e) => /^\d\d:\d\d$/.test(e[4]) ? e[4] : "";
+const isDL = e => /^\d\d:\d\d$/.test(e[4]);
+const sty = k => `--c:${S[k].c};--c2:${S[k].c2};--c3:${S[k].c3}`;
+
+function renderFilters(){
+  const f=document.getElementById("filters");
+  f.innerHTML = Object.entries(S).map(([k,s])=>`<button class="chip${off.has(k)?" off":""}" data-k="${k}" style="${sty(k)}"><span class="dot"></span>${s.n}</button>`).join("")
+    + "" + `<button class="chip tog${onlyBig?" on":""}" id="tog">⭐ Solo exámenes, prácticas, exposiciones y entregas</button>`;
+  f.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{ const k=b.dataset.k; off.has(k)?off.delete(k):off.add(k); saveF(); render(); });
+  document.getElementById("tog").onclick=()=>{ onlyBig=!onlyBig; saveF(); render(); };
+}
+
+function renderNext(){
+  const t=iso(TODAY);
+  const up=visible().filter(e=>e[0]>=t && !MINOR.has(e[2]));
+  const el=document.getElementById("next");
+  if(!up.length){ el.innerHTML=`<span class="lbl">Lo próximo</span><span>Nada pendiente 🎉</span>`; return; }
+  const d0=up[0][0]; const same=up.filter(e=>e[0]===d0);
+  const days=Math.round((pd(d0)-TODAY)/864e5);
+  const rel = days===0?"hoy":days===1?"mañana":`en ${days} días`;
+  el.innerHTML=`<span class="lbl">Lo próximo · ${rel}</span>`+same.map(e=>`<span class="pill" style="${sty(e[1])}">${K[e[2]]} <b>${S[e[1]].n}</b> · ${[e[3],whenTxt(e),e[5]].filter(Boolean).join(" · ")}</span>`).join("");
+}
+
+function renderMonths(){
+  const box=document.getElementById("months"); box.innerHTML="";
+  const ev=visible(); const by={}; ev.forEach(e=>(by[e[0]]=by[e[0]]||[]).push(e));
+  [[2026,10],[2026,11]].forEach(([y,m])=>{
+    const first=new Date(y,m,1), n=new Date(y,m+1,0).getDate();
+    const lead=(first.getDay()+6)%7;
+    let h=`<div class="month"><h2>${MES[m][0].toUpperCase()+MES[m].slice(1)} <em>${y}</em></h2><div class="grid">`+DOW.map(d=>`<div class="dow">${d}</div>`).join("");
+    for(let i=0;i<lead;i++) h+=`<div class="day blank"></div>`;
+    for(let d=1;d<=n;d++){
+      const dt=new Date(y,m,d), k=iso(dt), list=by[k]||[];
+      const past=dt<TODAY, today=+dt===+TODAY, we=dt.getDay()===0||dt.getDay()===6;
+      h+=`<div class="day${past?" past":""}${today?" today":""}${we?" we":""}${sel===k?" sel":""}" data-d="${k}">
+        <div class="n">${d}${today?"<i>hoy</i>":""}${HOL[k]?`<s>${HOL[k]}</s>`:""}</div>
+        ${list.map(e=>`<div class="ev${MINOR.has(e[2])?"":" big"}" style="${sty(e[1])}" title="${S[e[1]].n} · ${e[3]}">${K[e[2]]} ${S[e[1]].ab}</div>`).join("")}
+      </div>`;
+    }
+    h+=`</div><div class="detail" id="det-${m}"></div></div>`;
+    box.insertAdjacentHTML("beforeend",h);
+  });
+  box.querySelectorAll(".day[data-d]").forEach(d=>d.onclick=()=>{
+    if(d.classList.contains("past")) return;
+    sel = sel===d.dataset.d ? null : d.dataset.d; render();
+  });
+  if(sel){
+    const m=pd(sel).getMonth(), list=(by[sel]||[]);
+    const det=document.getElementById("det-"+m); det.classList.add("open");
+    const dt=pd(sel);
+    det.innerHTML=`<h3>${DOW[(dt.getDay()+6)%7]} ${dt.getDate()} de ${MES[dt.getMonth()]}</h3>`+
+      (list.length? list.map(e=>`<div>${K[e[2]]} <b style="color:${S[e[1]].c3}">${S[e[1]].n}</b> · ${[e[3],whenTxt(e),e[5]].filter(Boolean).join(" · ")}</div>`).join("") : `<div style="color:var(--soft)">Nada este día 🌸</div>`);
+  }
+}
+
+function renderAgenda(){
+  const el=document.getElementById("agenda");
+  const ev=visible().slice().sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:(a[4]==="clase")-(b[4]==="clase"));
+  const weeks={};
+  ev.forEach(e=>{ const d=pd(e[0]); const mon=new Date(d); mon.setDate(d.getDate()-((d.getDay()+6)%7)); (weeks[iso(mon)]=weeks[iso(mon)]||[]).push(e); });
+  el.innerHTML=Object.entries(weeks).map(([w,list])=>{
+    const a=pd(w), b=new Date(a); b.setDate(a.getDate()+6);
+    const lab = `Semana del ${a.getDate()} ${MES[a.getMonth()].slice(0,3)} al ${b.getDate()} ${MES[b.getMonth()].slice(0,3)}`;
+    return `<div class="week"><h4>${lab}</h4>`+list.map(e=>{
+      const d=pd(e[0]);
+      return `<div class="item${d<TODAY?" past":""}" style="${sty(e[1])}">
+        <div class="date"><b>${d.getDate()}</b><small>${DOW[(d.getDay()+6)%7]} · ${MES[d.getMonth()].slice(0,3)}</small></div>
+        <div><div class="t"><span class="k">${K[e[2]]}</span>${e[3]}</div>
+          <div class="s"><span class="sub">${S[e[1]].n}</span></div></div>
+        <div class="right">${isDL(e)?`<span class="when dl">${whenTxt(e)}</span>`:""}${e[5]?`<span class="w">${e[5]}</span>`:""}</div>
+      </div>`;
+    }).join("")+`</div>`;
+  }).join("") || `<p style="color:var(--soft)">No hay nada con estos filtros.</p>`;
+}
+
+function render(){ renderFilters(); renderNext(); renderMonths(); renderAgenda(); }
+render();
+</script>
+</body>
+</html>
